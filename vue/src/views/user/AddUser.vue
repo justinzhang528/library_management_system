@@ -1,21 +1,21 @@
 <template>
     <div style="width: 80%">
         <div style="margin:20px;">新增用戶</div>
-        <el-form :inline="true" :model="form" label-width="100px">
-            <el-form-item label="姓名">
+        <el-form :inline="true" :model="form" :rules="inputRules" ref="addUserForm" label-width="100px">
+            <el-form-item label="姓名" prop="name">
                 <el-input v-model="form.name" placeholder="請輸入姓名"></el-input>
             </el-form-item>
-            <el-form-item label="年齡">
-                <el-input v-model="form.age" placeholder="請輸入年齡"></el-input>
+            <el-form-item label="年齡" prop="age">
+                <el-input v-model="form.age" type="number" min="0" placeholder="請輸入年齡"></el-input>
             </el-form-item>
-            <el-form-item label="性別">
+            <el-form-item label="性別" prop="sex">
                 <el-radio label="1" v-model="form.sex">男</el-radio>
                 <el-radio label="0" v-model="form.sex">女</el-radio>
             </el-form-item>
-            <el-form-item label="電話">
-                <el-input v-model="form.phone" placeholder="請輸入電話號碼"></el-input>
+            <el-form-item label="電話" prop="phone">
+                <el-input v-model="form.phone" type="number" min="0" placeholder="請輸入電話號碼"></el-input>
             </el-form-item>
-            <el-form-item label="地址">
+            <el-form-item label="地址" prop="address">
                 <el-input v-model="form.address" placeholder="請輸入地址"></el-input>
             </el-form-item>
         </el-form>
@@ -40,24 +40,41 @@ export default {
         phone:'',
         sex:'1',
       },
+      inputRules:{
+        name:[
+            {required: true, message: "姓名不能為空", trigger:"blur"},
+        ],
+        age:[
+            {required: true, message: "年齡不能為空", trigger:"blur"},
+        ],
+        phone:[
+            {required: true, message: "電話不能為空", trigger:"blur"},
+        ],
+        address:[
+            {required: true, message: "地址不能為空", trigger:"blur"},
+        ],
+      }
     }
   },
   methods:{
     save(){
-        console.log(this.form)
-        // 不用axios的方式進行請求：
-        // fetch('http://localhost:9090/user/list',this.searchParams).then(res=>res.json()).then(res=>{
-        //   this.tableData = res.data;
-        // })
-        // 使用axios進行封裝後的方式進行請求：
-        request.post('/user/addUser', this.form).then(res=>{
-            if(res.code === '200'){
-                this.$notify.success('新增成功')
-                this.form = {name:'', age:'', address:'', phone:'', sex:'1'}
-            }else{
-                this.$notify.error(res.msg);
-            }
-        })
+        this.$refs["addUserForm"].validate(valid => {
+            if (valid) {            
+                // 不用axios的方式進行請求：
+                // fetch('http://localhost:9090/user/list',this.searchParams).then(res=>res.json()).then(res=>{
+                //   this.tableData = res.data;
+                // })
+                // 使用axios進行封裝後的方式進行請求：
+                request.post('/user/addUser', this.form).then(res=>{
+                    if(res.code === '200'){
+                        this.$notify.success('新增成功')
+                        this.form = {name:'', age:'', address:'', phone:'', sex:'1'}
+                    }else{
+                        this.$notify.error(res.msg);
+                    }
+                })
+            } 
+        });
     }
   }
 }

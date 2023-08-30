@@ -51,3 +51,11 @@ insert into [admin] values('test','test','test@gmail.com','094622214')
 select * from admin
 
 select * from [user]
+
+select * from BOOK_LEND_RECORD
+
+
+Select * From BOOK_LEND_RECORD Where BOOK_ID Not IN
+                                     (Select BOOK_ID From BOOK_DATA)
+
+select * from MEMBER_M
