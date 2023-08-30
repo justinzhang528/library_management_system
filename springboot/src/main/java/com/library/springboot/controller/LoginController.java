@@ -5,6 +5,8 @@ import com.library.springboot.entity.Admin;
 import com.library.springboot.entity.AdminLogin;
 import com.library.springboot.entity.LoginInput;
 import com.library.springboot.service.AdminService;
+import com.library.springboot.utils.TokenUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,10 +20,16 @@ public class LoginController {
 
     @PostMapping("/login")
     public Result Login(@RequestBody LoginInput loginInput){
-        AdminLogin adminLogin = this.adminService.getAdminByNameAndPassword(loginInput);
-        if(adminLogin==null){
+        Admin admin = this.adminService.getAdminByNameAndPassword(loginInput);
+        if(admin==null){
             return Result.error("用戶名或密碼錯誤！");
         }
+
+        AdminLogin adminLogin = new AdminLogin();
+        BeanUtils.copyProperties(admin,adminLogin);
+
+        String token = TokenUtils.genToken(String.valueOf(admin.getId()),admin.getPassword());
+        adminLogin.setToken(token);
         Result result = Result.success();
         result.setData(adminLogin);
         return result;

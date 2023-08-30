@@ -7,4 +7,5 @@ public class AdminLogin {
     String name;
     String email;
     String phone;
+    String token;
 }

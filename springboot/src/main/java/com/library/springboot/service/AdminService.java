@@ -26,7 +26,6 @@ public class AdminService implements IAdminService{
     @Override
     public void addAdmin(Admin admin) {
         this.adminMapper.addAdmin(admin);
-
     }
 
     @Override
@@ -50,7 +49,12 @@ public class AdminService implements IAdminService{
     }
 
     @Override
-    public AdminLogin getAdminByNameAndPassword(LoginInput loginInput) {
+    public Admin getAdminByNameAndPassword(LoginInput loginInput) {
         return this.adminMapper.getAdminByNameAndPassword(loginInput);
+    }
+
+    @Override
+    public Admin getAdminById(Integer id) {
+        return this.adminMapper.getAdminById(id);
     }
 }

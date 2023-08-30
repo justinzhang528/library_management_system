@@ -19,5 +19,7 @@ public interface AdminMapper {
 
     String getAdminPasswordById(Integer id);
 
-    AdminLogin getAdminByNameAndPassword(LoginInput loginInput);
+    Admin getAdminByNameAndPassword(LoginInput loginInput);
+
+    Admin getAdminById(Integer id);
 }

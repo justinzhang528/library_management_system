@@ -17,5 +17,7 @@ public interface IAdminService {
 
     Boolean updateAdminPassword(AdminPassword adminPassword);
 
-    AdminLogin getAdminByNameAndPassword(LoginInput loginInput);
+    Admin getAdminByNameAndPassword(LoginInput loginInput);
+
+    Admin getAdminById(Integer integer);
 }

@@ -28,8 +28,12 @@
         select password from [admin] where id = #{ id }
     </select>
 
-    <select id="getAdminByNameAndPassword" resultType="com.library.springboot.entity.AdminLogin">
+    <select id="getAdminByNameAndPassword" resultType="com.library.springboot.entity.Admin">
         select * from [admin] where name = #{ username } and password = #{ password }
+    </select>
+
+    <select id="getAdminById" resultType="com.library.springboot.entity.Admin">
+        select * from [admin] where id = #{ id }
     </select>
 
     <insert id="addAdmin">

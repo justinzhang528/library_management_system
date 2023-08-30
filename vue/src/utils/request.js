@@ -1,7 +1,9 @@
+import router from '@/router';
 import axios from 'axios'
+import Cookies from 'js-cookie';
 
 const request = axios.create({
-    baseURL: 'http://localhost:9090',
+    baseURL: 'http://localhost:9090/api',
     timeout: 5000
 })
 
@@ -11,7 +13,11 @@ const request = axios.create({
 request.interceptors.request.use(config=>{
     config.headers['Content-Type'] = 'application/json;charaset=utf-8';
 
-    // config.headers['header'] = user.token; //設置請求頭
+    const adminJson = Cookies.get('admin')
+    if(adminJson){
+        config.headers['token'] = JSON.parse(adminJson).token
+    }
+
     return config
 },error=>{
     return Promise.reject(error);
@@ -25,6 +31,10 @@ request.interceptors.response.use(response=>{
     if(typeof res === 'string'){
         res = res ? JSON.parse(res) : res
     }
+    if(res.code === '401'){
+        router.push('/login')
+    }
+    console.log(res)
     return res;
 },error=>{
     console.log('err' + error);
