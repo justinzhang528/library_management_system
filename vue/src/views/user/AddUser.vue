@@ -49,6 +49,7 @@ export default {
         ],
         phone:[
             {required: true, message: "電話不能為空", trigger:"blur"},
+            {min:8, max:10, message: "長度必須是8-10個數字之間", trigger:"blur"}
         ],
         address:[
             {required: true, message: "地址不能為空", trigger:"blur"},

@@ -9,7 +9,7 @@
             <div style="flex: 1; text-align: right; padding-right: 20px;">
                 <el-dropdown trigger="click">
                     <span class="el-dropdown-link" style="cursor: pointer;">
-                        {{ admin.name }}<i class="el-icon-arrow-down el-icon--right"></i>
+                        管理員: {{ admin.name }}<i class="el-icon-arrow-down el-icon--right"></i>
                     </span>
                     <el-dropdown-menu slot="dropdown">
                         <el-dropdown-item><div @click="logout">登出</div></el-dropdown-item>

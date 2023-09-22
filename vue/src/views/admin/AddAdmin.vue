@@ -49,7 +49,7 @@ export default {
         ],
         phone:[
             {required: true, message: "電話不能為空", trigger:"blur"},
-            {min:8, max:10, message: "長度必須是8-10個字符之間", trigger:"blur"}
+            {min:8, max:10, message: "長度必須是8-10個數字之間", trigger:"blur"}
         ],
       }
     }
@@ -57,21 +57,21 @@ export default {
   methods:{
     save(){
       this.$refs["addAdminForm"].validate(valid => {
-          if (valid) {            
-              // 不用axios的方式進行請求：
-              // fetch('http://localhost:9090/user/list',this.searchParams).then(res=>res.json()).then(res=>{
-              //   this.tableData = res.data;
-              // })
-              // 使用axios進行封裝後的方式進行請求：
-              request.post('/admin/addAdmin', this.form).then(res=>{
-                if(res.code === '200'){
-                    this.$notify.success('新增成功')
-                    this.form = {name:'', password:'', email:'', phone:''}
-                }else{
-                    this.$notify.error(res.msg);
-                }
-              })
-          } 
+        if (valid) {            
+            // 不用axios的方式進行請求：
+            // fetch('http://localhost:9090/user/list',this.searchParams).then(res=>res.json()).then(res=>{
+            //   this.tableData = res.data;
+            // })
+            // 使用axios進行封裝後的方式進行請求：
+            request.post('/admin/addAdmin', this.form).then(res=>{
+              if(res.code === '200'){
+                  this.$notify.success('新增成功')
+                  this.form = {name:'', password:'', email:'', phone:''}
+              }else{
+                  this.$notify.error(res.msg);
+              }
+            })
+        } 
       });
     }
   }

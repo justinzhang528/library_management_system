@@ -49,11 +49,11 @@
 
       <!-- 編輯用戶窗口 -->
       <el-dialog title="修改密碼" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
-        <el-form :model="editForm">
-          <el-form-item label="舊密碼">
+        <el-form :model="editForm" :rules="inputRules" ref="editPasswordForm">
+          <el-form-item label="舊密碼" prop="oldPassword">
               <el-input v-model="editForm.oldPassword" placeholder="請輸入舊密碼"></el-input>
           </el-form-item>
-          <el-form-item label="新密碼">
+          <el-form-item label="新密碼" prop="newPassword">
               <el-input v-model="editForm.newPassword" placeholder="請輸入新密碼"></el-input>
           </el-form-item>
         </el-form>
@@ -89,6 +89,16 @@
           newPassword:''
         },
         editIndex: 0,
+        inputRules:{
+          oldPassword:[
+              {required: true, message: "密碼不能為空", trigger:"blur"},
+              {min:4, max:15, message: "長度必須是4-15個字符之間", trigger:"blur"}
+          ],
+          newPassword:[
+              {required: true, message: "密碼不能為空", trigger:"blur"},
+              {min:4, max:15, message: "長度必須是4-15個字符之間", trigger:"blur"}
+          ],
+        }
       }
     },
     created(){
@@ -121,14 +131,18 @@
         this.load()
       },
       updateAdminPassword(){
-        request.post('/admin/updateAdminPassword', this.editForm).then(res=>{
-            if(res.code === '200'){
-                this.$notify.success('修改成功')                
-                this.dialogFormVisible = false
-            }else{
-                this.$notify.error(res.msg);
-            }
-        })
+        this.$refs["editPasswordForm"].validate(valid => {
+          if(valid){            
+            request.post('/admin/updateAdminPassword', this.editForm).then(res=>{
+                if(res.code === '200'){
+                    this.$notify.success('修改成功')                
+                    this.dialogFormVisible = false
+                }else{
+                    this.$notify.error(res.msg);
+                }
+            })
+          } 
+        });
       },
       handleEdit(index, row) {
         this.editForm.id = row.id

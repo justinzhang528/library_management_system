@@ -44,27 +44,25 @@
           :current-page="currentPage"
           @current-change="setPage">
         </el-pagination>
-      </div>
-
-      
+      </div>      
 
       <!-- 編輯用戶窗口 -->
       <el-dialog title="編輯會員" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
-        <el-form :model="editForm">
-          <el-form-item label="姓名">
+        <el-form :model="editForm" :rules="inputRules" ref="editUserForm">
+          <el-form-item label="姓名" prop="name">
               <el-input v-model="editForm.name" placeholder="請輸入姓名"></el-input>
           </el-form-item>
-          <el-form-item label="年齡">
-              <el-input v-model="editForm.age" placeholder="請輸入年齡"></el-input>
+          <el-form-item label="年齡" prop="age">
+              <el-input v-model="editForm.age" type="number" min="0" placeholder="請輸入年齡"></el-input>
           </el-form-item>
-          <el-form-item label="性別">
+          <el-form-item label="性別" prop="sex">
               <el-radio label="1" v-model="editForm.sex">男</el-radio>
               <el-radio label="0" v-model="editForm.sex">女</el-radio>
           </el-form-item>
-          <el-form-item label="電話">
-              <el-input v-model="editForm.phone" placeholder="請輸入電話號碼"></el-input>
+          <el-form-item label="電話" prop="phone">
+              <el-input v-model="editForm.phone" type="number" min="0" placeholder="請輸入電話號碼"></el-input>
           </el-form-item>
-          <el-form-item label="地址">
+          <el-form-item label="地址" prop="address">
               <el-input v-model="editForm.address" placeholder="請輸入地址"></el-input>
           </el-form-item>
         </el-form>
@@ -102,6 +100,21 @@
           sex:'1',
         },
         editIndex: 0,
+        inputRules:{
+          name:[
+              {required: true, message: "姓名不能為空", trigger:"blur"},
+          ],
+          age:[
+              {required: true, message: "年齡不能為空", trigger:"blur"},
+          ],
+          phone:[
+              {required: true, message: "電話不能為空", trigger:"blur"},
+              {min:8, max:10, message: "長度必須是8-10個數字之間", trigger:"blur"}
+          ],
+          address:[
+              {required: true, message: "地址不能為空", trigger:"blur"},
+          ],
+        }
       }
     },
     created(){
@@ -134,19 +147,23 @@
         this.load()
       },
       updateUser(){
-        request.post('/user/updateUser', this.editForm).then(res=>{
-            if(res.code === '200'){
-                this.$notify.success('修改成功')
-            }else{
-                this.$notify.error(res.msg);
-            }
-        })
-        this.pagedTableData[this.editIndex].name = this.editForm.name
-        this.pagedTableData[this.editIndex].age = this.editForm.age
-        this.pagedTableData[this.editIndex].address = this.editForm.address
-        this.pagedTableData[this.editIndex].phone = this.editForm.phone
-        this.pagedTableData[this.editIndex].sex = this.editForm.sex
-        this.dialogFormVisible = false
+        this.$refs["editUserForm"].validate(valid => {
+            if (valid) {            
+              request.post('/user/updateUser', this.editForm).then(res=>{
+                if(res.code === '200'){
+                    this.$notify.success('修改成功')
+                }else{
+                    this.$notify.error(res.msg);
+                }
+            })
+            this.pagedTableData[this.editIndex].name = this.editForm.name
+            this.pagedTableData[this.editIndex].age = this.editForm.age
+            this.pagedTableData[this.editIndex].address = this.editForm.address
+            this.pagedTableData[this.editIndex].phone = this.editForm.phone
+            this.pagedTableData[this.editIndex].sex = this.editForm.sex
+            this.dialogFormVisible = false
+          }
+        });        
       },
       handleEdit(index, row) {
         this.editForm.id = row.id
